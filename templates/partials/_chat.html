@@ -1,0 +1,11 @@
+{% for message in messages %}
+  {% include 'partials/_message.html' %}
+{% endfor %}
+
+<div
+  hx-ext="sse" 
+  sse-connect="/stream/{{ index }}"
+  sse-swap="message"
+  hx-swap="beforeend"
+  sse-close="done"
+> </div>

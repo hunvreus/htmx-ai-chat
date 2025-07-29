@@ -1,0 +1,31 @@
+{% if message.content is string %}
+  <div {% if message.role == 'user' %}
+    class="flex justify-end"
+  {% endif %}>
+    <div
+      {% if message.role == 'user' %}
+        class="bg-accent inline-flex items-center rounded-xl py-2 px-3"
+      {% endif %}
+  >
+    {{ message.content }}
+  </div>
+</div>
+{% else %}
+  {% for part in message.content %}
+    <div {% if message.role == 'user' %}
+      class="flex justify-end"
+    {% endif %}>
+      <div
+        {% if message.role == 'user' %}
+          class="bg-accent inline-flex items-center rounded-xl py-2 px-3"
+        {% endif %}
+      >
+        {% if part.type == 'text' %}
+          <p>{{ part.text }}</p>
+        {% elif part.type == 'image_url' %}
+          <img src="{{ part.image_url.url }}" alt="User upload" style="max-width: 400px; border-radius: 5px;"/>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
