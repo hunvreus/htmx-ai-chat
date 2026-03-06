@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script>
+      (() => {
+        try {
+          const stored = localStorage.getItem('themeMode');
+          if (stored ? stored === 'dark'
+                     : matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+          }
+        } catch (_) {}
+
+        const apply = dark => {
+          document.documentElement.classList.toggle('dark', dark);
+          try { localStorage.setItem('themeMode', dark ? 'dark' : 'light'); } catch (_) {}
+        };
+
+        document.addEventListener('basecoat:theme', (event) => {
+          const mode = event.detail?.mode;
+          apply(mode === 'dark' ? true
+               : mode === 'light' ? false
+               : !document.documentElement.classList.contains('dark'));
+        });
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 5: HTMX Thinking Placeholder</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/all.min.js" defer></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  </head>
+  <body class="h-screen">
+    <main class="mx-auto flex h-screen w-full flex-col overflow-hidden">
+      <header class="flex items-center px-4 py-3">
+        <button
+          type="button"
+          aria-label="Toggle dark mode"
+          onclick="document.dispatchEvent(new CustomEvent('basecoat:theme'))"
+          class="btn-sm-ghost size-6 ml-auto"
+        >
+          <span class="hidden dark:block">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+          </span>
+          <span class="block dark:hidden">
+            <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 1 0 9 9 9 9 0 1 1-9-9"/></svg>
+          </span>
+        </button>
+      </header>
+
+      <section aria-label="Conversation" class="flex min-h-0 flex-1 flex-col">
+        <div id="chat" class="min-h-0 flex-1 overflow-y-auto pb-4" aria-live="polite" role="log">
+          <div id="chat-list" class="mx-auto w-full max-w-3xl space-y-3 px-4 py-6">
+            {% for message in messages %}
+            {% if message.role == 'user' %}
+            <article class="flex justify-end">
+              <p class="max-w-[80%] rounded-xl px-3 py-2 text-sm whitespace-pre-wrap bg-neutral-100 dark:bg-neutral-900">{{ message.content }}</p>
+            </article>
+            {% else %}
+            {% include 'partials/assistant_message.html' %}
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <form
+        method="post"
+        action="/"
+        id="chat-form"
+        class="mt-auto pt-3"
+        hx-post="/"
+        hx-target="#chat-list"
+        hx-swap="beforeend"
+        hx-disabled-elt="find button[type='submit']"
+        hx-on::before-request="const t=this.querySelector('#message'); if(t){t.value=''; t.focus();}"
+      >
+        <div class="mx-auto flex w-full max-w-3xl items-start gap-2 px-4 pb-6">
+          <label for="message" class="sr-only">Message</label>
+          <textarea id="message" name="message" placeholder="Ask anything" class="textarea min-h-9 field-sizing-content [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] resize-none" rows="1" required></textarea>
+          <button type="submit" class="btn">Send</button>
+        </div>
+      </form>
+    </main>
+
+    <script>
+      const form = document.getElementById("chat-form");
+      const textarea = document.getElementById("message");
+      const chat = document.getElementById("chat");
+
+      textarea.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          form.requestSubmit();
+        }
+      });
+
+      function scrollChatToBottom() {
+        if (!chat) return;
+        chat.scrollTop = chat.scrollHeight;
+      }
+
+      document.addEventListener("DOMContentLoaded", scrollChatToBottom);
+      document.body.addEventListener("htmx:afterSwap", scrollChatToBottom);
+    </script>
+  </body>
+</html>

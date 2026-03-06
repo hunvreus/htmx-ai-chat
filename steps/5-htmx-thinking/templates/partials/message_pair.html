@@ -1,0 +1,12 @@
+<article class="flex justify-end">
+  <p class="max-w-[80%] rounded-xl px-3 py-2 text-sm whitespace-pre-wrap bg-neutral-100 dark:bg-neutral-900">{{ user_message }}</p>
+</article>
+<article
+  id="message-{{ assistant_id }}"
+  class="flex justify-start"
+  hx-get="/messages/{{ assistant_id }}"
+  hx-trigger="load"
+  hx-swap="outerHTML"
+>
+  <p class="max-w-[80%] px-1 py-2 text-sm text-neutral-500 dark:text-neutral-400 animate-pulse">Thinking...</p>
+</article>

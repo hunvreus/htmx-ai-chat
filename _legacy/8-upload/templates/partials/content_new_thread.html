@@ -1,0 +1,41 @@
+<section id="app-content" class="flex min-h-0 flex-1 flex-col">
+  <header class="px-4 py-3 flex items-center gap-2">
+    {% if threads %}
+    <button type="button" onclick="document.dispatchEvent(new CustomEvent('basecoat:sidebar'))" class="btn-sm-ghost size-6">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="size-4 lucide lucide-panel-left-icon lucide-panel-left"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg>
+    </button>
+    {% endif %}
+    <button
+      type="button"
+      aria-label="Toggle dark mode"
+      onclick="document.dispatchEvent(new CustomEvent('basecoat:theme'))"
+      class="btn-sm-ghost size-6 ml-auto"
+    >
+      <span class="hidden dark:block">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+      </span>
+      <span class="block dark:hidden">
+        <svg xmlns="http://www.w3.org/2000/svg" class="size-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 1 0 9 9 9 9 0 1 1-9-9"/></svg>
+      </span>
+    </button>
+  </header>
+  <div class="flex min-h-0 flex-1 items-center justify-center px-4 pb-4">
+    <div class="w-full max-w-3xl">
+      <h1 class="mb-8 text-center text-3xl font-semibold">How can I help?</h1>
+      <form method="post" action="/start" id="chat-form">
+        <div class="mx-auto flex w-full max-w-3xl items-start gap-2 px-4 pb-6">
+          <label for="message" class="sr-only">Message</label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Ask anything"
+            class="textarea min-h-9 w-full field-sizing-content [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] resize-none"
+            rows="1"
+            required
+          ></textarea>
+          <button type="submit" class="btn">Send</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</section>

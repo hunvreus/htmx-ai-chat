@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 3: Basecoat UI</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+      @custom-variant dark (&:where(.dark, .dark *));
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/basecoat.cdn.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.11/dist/js/all.min.js" defer></script>
+  </head>
+  <body class="min-h-screen">
+    <main class="mx-auto flex min-h-screen w-full max-w-3xl flex-col px-4 py-6">
+      <section aria-label="Conversation">
+        <div id="chat" class="flex-1 space-y-3 overflow-y-auto pb-4" aria-live="polite" role="log">
+          {% for message in messages %}
+          <article class="flex {% if message.role == 'user' %}justify-end{% else %}justify-start{% endif %}">
+            {% if message.role == 'user' %}
+            <p class="max-w-[80%] rounded-xl px-3 py-2 text-sm bg-neutral-100 whitespace-pre-wrap">{{ message.content }}</p>
+            {% else %}
+            <p class="max-w-[80%] px-1 py-2 text-sm whitespace-pre-wrap">{{ message.content }}</p>
+            {% endif %}
+          </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <form method="post" action="/messages" id="chat-form" class="mt-auto pt-3 flex items-start gap-2">
+        <label for="message" class="sr-only">Message</label>
+        <textarea id="message" name="message" placeholder="Ask anything" class="textarea min-h-9 field-sizing-content [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] resize-none" rows="1" required></textarea>
+        <button type="submit" class="btn">Send</button>
+      </form>
+    </main>
+
+    <script>
+      const form = document.getElementById("chat-form");
+      const textarea = document.getElementById("message");
+
+      textarea.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          form.requestSubmit();
+        }
+      });
+
+      function autosize() {
+        textarea.style.height = "auto";
+        textarea.style.height = `${textarea.scrollHeight}px`;
+      }
+
+      textarea.addEventListener("input", autosize);
+      autosize();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{% if message.status == 'pending' %}
+<article
+  id="message-{{ message.id }}"
+  class="flex justify-start"
+  hx-get="/messages/{{ message.id }}"
+  hx-trigger="load"
+  hx-swap="outerHTML"
+>
+  <p class="max-w-[80%] px-1 py-2 text-sm text-neutral-500 dark:text-neutral-400 animate-pulse">Thinking...</p>
+</article>
+{% else %}
+<article id="message-{{ message.id }}" class="flex justify-start">
+  <p class="max-w-[80%] px-1 py-2 text-sm whitespace-pre-wrap">{{ message.content }}</p>
+</article>
+{% endif %}

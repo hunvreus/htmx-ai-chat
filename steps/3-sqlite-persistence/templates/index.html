@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 3: SQLite Persistence</title>
+    <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+    <style>
+      .htmx-indicator {
+        display: none;
+      }
+      .htmx-request.htmx-indicator {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section aria-label="Conversation">
+        <div id="chat" aria-live="polite" role="log">
+          <div id="chat-list">
+            {% for message in messages %}
+            <article>
+              <strong>{{ message.role|capitalize }}</strong>
+              <p>{{ message.content }}</p>
+            </article>
+            {% endfor %}
+          </div>
+          <article id="loading-indicator" class="htmx-indicator" aria-live="polite">
+            <p>Loading...</p>
+          </article>
+        </div>
+      </section>
+
+      <form
+        method="post"
+        action="/"
+        id="chat-form"
+        hx-post="/"
+        hx-target="#chat-list"
+        hx-swap="beforeend"
+        hx-disabled-elt="find button[type='submit']"
+        hx-indicator="#loading-indicator"
+        hx-on::after-request="this.reset(); this.querySelector('#message')?.focus();"
+      >
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Ask anything" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </main>
+
+    <script>
+      const form = document.getElementById("chat-form");
+      const textarea = document.getElementById("message");
+
+      textarea.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          form.requestSubmit();
+        }
+      });
+    </script>
+  </body>
+</html>

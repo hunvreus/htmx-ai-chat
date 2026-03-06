@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Step 1: Basic Chat</title>
+  </head>
+  <body>
+    <main>
+      <section aria-label="Conversation">
+        <div id="chat" aria-live="polite" role="log">
+          {% for message in messages %}
+            <article>
+              <strong>{{ message.role|capitalize }}</strong>
+              <p>{{ message.content }}</p>
+            </article>
+          {% endfor %}
+        </div>
+      </section>
+
+      <form method="post" action="/" id="chat-form">
+        <label for="message">Message</label>
+        <textarea id="message" name="message" placeholder="Ask anything" required></textarea>
+        <button type="submit">Send</button>
+      </form>
+    </main>
+
+    <script>
+      const form = document.getElementById("chat-form");
+      const textarea = document.getElementById("message");
+
+      textarea.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+          form.requestSubmit();
+        }
+      });
+    </script>
+  </body>
+</html>

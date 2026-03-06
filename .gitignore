@@ -11,3 +11,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local data and OS artifacts
+.DS_Store
+*.db
+*.sqlite3
