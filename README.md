@@ -1,5 +1,7 @@
 # HTMX Chatbot Tutorial (FastAPI)
 
+<a href="https://www.youtube.com/watch?v=1laBL3aeDX4"><img width="1512" height="982" alt="Screenshot 2026-03-06 at 12 01 52 PM" src="https://github.com/user-attachments/assets/21daa168-3ed6-40f8-afde-5a20e60f8198" /></a>
+
 This repo is a step-by-step build of a chat app with FastAPI + HTMX, with just enough JS when needed.
 
 The goal is not “build the fanciest app”.
